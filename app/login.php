@@ -1,22 +1,22 @@
 <?php 
-include 'conexion.php';
-$errores = "";
-if (isset($_POST['usuario']) && isset($_POST['contraseña'])) {
-    $usuario = $_POST['usuario'];
-    $contraseña = $_POST['contraseña'];
+session_start();
+include 'connection.php';
+$errors = "";
+if (isset($_POST['user_name']) && isset($_POST['password'])) {
+    $user_name = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-    $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
-    $resultado = $conexion->query($sql);
-    $datos = $resultado->fetch(PDO::FETCH_NAMED);
+    $sql = "SELECT * FROM usuarios WHERE usuario = '$user_name'";
+    $result = $connection->query($sql);
+    $data = $result->fetch(PDO::FETCH_NAMED);
     // Consutar la base de datos y comaprar los bslores
-    if ($usuario == $datos['usuario'] && $contraseña == $datos['contrasena']) {
-        setcookie('usuario', "$usuario");
-        // Usuario correcto y setcookie
+    if ($user_name == $data['usuario'] && $password == $data['contrasena']) {
+        $_SESSION['user'] = $user_name;
         header('Location: agrega-producto.php');
         return;
     }
     else {
-        $errores = "Usuario o contraseña no válida no válido";
+        $errors = "Usuario o contraseña no válida no válido";
     }
 }
 ?>
@@ -33,7 +33,7 @@ if (isset($_POST['usuario']) && isset($_POST['contraseña'])) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.min.js"></script>
     <link rel="stylesheet" type="text/css" href="estilos.css">
-    <title>Document</title>
+    <title>Inventario</title>
 </head>
 <body>
     <!-- Nav bar -->
@@ -71,10 +71,10 @@ if (isset($_POST['usuario']) && isset($_POST['contraseña'])) {
                 <div class="col col-md-4 mx-4 text-center">
                     <form method="POST" action="">
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-success" id="usuario" name="usuario" placeholder="Nombre de usuario">
+                            <input type="text" class="form-control form-control-success" id="user_name" name="user_name" placeholder="Nombre de usuario">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" id="contraseña" name="contraseña" placeholder="Contraseña">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
                         </div>
                         <button type="submit" class="btn btn-success mb-3">Iniciar sesión</button>
                     </form>
