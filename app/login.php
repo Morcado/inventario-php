@@ -2,21 +2,30 @@
 session_start();
 include 'connection.php';
 $errors = "";
-if (isset($_POST['user_name']) && isset($_POST['password'])) {
-    $user_name = filter_input(INPUT_POST, 'user_name', FILTER_SANITIZE_STRING);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // var_dump($_POST);
+    if ($_POST['username'] != "" && $_POST['password'] != "") {
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-    $sql = "SELECT * FROM usuarios WHERE usuario = '$user_name'";
-    $result = $connection->query($sql);
-    $data = $result->fetch(PDO::FETCH_NAMED);
-    // Consutar la base de datos y comaprar los bslores
-    if ($user_name == $data['usuario'] && $password == $data['contrasena']) {
-        $_SESSION['user'] = $user_name;
-        header('Location: agrega-producto.php');
-        return;
+        $sql = "SELECT * FROM users WHERE username = :username";
+        $sentence = $connection->prepare($sql);
+        $sentence->bindValue(':username', $username);
+        $sentence->execute();
+
+        $data = $sentence->fetchObject();
+        // Consutar la base de datos y comaprar los bslores
+        if ($data != false && $password == $data->password /*password_verify($password, $data->password*/ ) {
+            $_SESSION['username'] = $username;
+            header('Location: add_product.php');
+            return;
+        }
+        else {
+            $errors = "Usuario o contraseña no válido";
+        }
     }
     else {
-        $errors = "Usuario o contraseña no válida no válido";
+        $errors = "Por favor llena todos los campos";
     }
 }
 ?>
@@ -71,12 +80,15 @@ if (isset($_POST['user_name']) && isset($_POST['password'])) {
                 <div class="col col-md-4 mx-4 text-center">
                     <form method="POST" action="">
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-success" id="user_name" name="user_name" placeholder="Nombre de usuario">
+                            <input type="text" class="form-control form-control-success" id="username" name="username" placeholder="Nombre de usuario">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
                         </div>
                         <button type="submit" class="btn btn-success mb-3">Iniciar sesión</button>
+                        <?php if ($errors != ""): ?>
+                        <p><?=$errors?></p>
+                        <?php $errors = ""; endif ?>
                     </form>
                 </div>
             </div>

@@ -14,3 +14,13 @@
 .icono {
     color: black;
 }
+
+.boton {
+    cursor: pointer;
+
+}
+
+.boton:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}

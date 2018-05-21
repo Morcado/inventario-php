@@ -1,9 +1,9 @@
 <?php 
-$fuente = "mysql:host=localhost;dbname=kardexdb";
+$fuente = "mysql:host=localhost;dbname=proyecto_inventario";
 $usuario ="root";
 $contraseña ="root";
 try {
-    $conexion = new PDO($fuente, $usuario, $contraseña);
+    $connection = new PDO($fuente, $usuario, $contraseña);
 }
 catch (PDOException $e) {
     echo 'Error en la conexion' . $e->getMessage();
