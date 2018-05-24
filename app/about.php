@@ -26,23 +26,12 @@ session_start();
     <title>Acerca de</title>
 </head>
 <body>
-    <!-- Nav bar -->
-<nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema">
-
-    <!-- Logotipo -->
-    <a class="d-none d-sm-block" href="#" ><img src="holder.js/50x50/"></a>
-    <button class="navbar-toggler mr-auto ml-3" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon outline"></span>
-    </button>
-    <p class="navbar-brand ml-3 d-none d-sm-block">Empresa</p>
-    <div class="ml-5 text-white">
-        <script type="text/javascript"></script>
-        <h4>Acerca de</h4>
-    </div>
-    <!-- Menu -->
-<?php include 'header.php' ?>
-
-               <div class="col-md-7 mt-5 mt-lg-0 mt-sm-0">
+<?php include 'navbar.php' ?>
+        <div class="container pt-md-5 mt-md-5 pt-sm-5 mt-sm-5">
+            <div class="row">
+                    
+<?php include 'navigation.php' ?>
+                <div class="col-md-7 mt-5 mt-lg-0 mt-sm-0">
                     <h2>Quienes somos</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -58,6 +47,9 @@ session_start();
                     consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
                     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
                     proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              </div>
-
+                </div>
+            </div>
+        </div>
 <?php include 'footer.php' ?>
+</body>
+</html>

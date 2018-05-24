@@ -2,8 +2,13 @@
     background-color: #99C482;
 }
 
+body {
+  margin-bottom:70px;
+}
+
 .footer {
-  bottom: 0;
+  position: fixed;
+  bottom: 0px;
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 70px;

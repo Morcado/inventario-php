@@ -1,0 +1,1 @@
+document.getElementById("pageTitle").innerHTML = document.title;

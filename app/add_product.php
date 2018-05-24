@@ -26,23 +26,11 @@ session_start();
     <title>Agrega producto</title>
 </head>
 <body>
-    <!-- Nav bar -->
-<nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema">
+<?php include 'navbar.php' ?>
+    <div class="container pt-md-5 mt-md-5 pt-sm-5 mt-sm-5">
+        <div class="row">
+<?php include 'navigation.php' ?>
 
-    <!-- Logotipo -->
-    <a class="d-none d-sm-block" href="#" ><img src="holder.js/50x50/"></a>
-    <button class="navbar-toggler mr-auto ml-3" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon outline"></span>
-    </button>
-    <p class="navbar-brand ml-3 d-none d-sm-block">Empresa</p>
-    <div class="ml-5 text-white">
-        <script type="text/javascript"></script>
-        <h4>Agrega producto</h4>
-    </div>
-    <!-- Menu -->
-<?php include 'header.php' ?>
-
-            <!-- Columna central -->
             <div class="col-md-5 mt-5 mt-lg-0">
                 <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
                 <form>
@@ -91,5 +79,8 @@ session_start();
                     </div>
                 </form>
             </div>
-
-<?php include 'footer.php'; ?>
+        </div>
+    </div>
+<?php include 'footer.php' ?>
+</body>
+</html>
