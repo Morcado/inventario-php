@@ -1,4 +1,4 @@
-        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema">
+        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema ">
 
             <!-- Logotipo -->
             <img src="images/crane100x100.png" height="50px">

@@ -33,15 +33,67 @@ session_start();
                 <div class="col-md-7 mt-5 mt-lg-0 mt-sm-0">
                     <h2>Ayuda</h2>
                     <p>Para manejar el entorno en la barra lateral izquierda se encuentran los botones
-                    para navegar a traves del inventario donde se podrá agregar un producto, eliminar
+                    para navegar a traves del inventario donde podrá agregar un producto, eliminar
                     un producto, modificar un producto, etc.</p>
 
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <h3>Agregar un producto nuevo</h3>
+                    <p>Cuando un producto nuevo se quiere agregar al inventario. Si el producto ya existe
+                    se notifica si se desea modificar dicho producto</p>
+                    <h6>Elementos a considerar al agregar un producto nuevo</h6>
+                    <ul>
+                        <li>Nombre del producto</li>
+                        <li>Descripción del producto</li>
+                        <li>Precio del producto</li>
+                        <li>Categoría del producto</li>
+                    </ul>
+
+                    <h3>Modificar un producto existente</h3>
+                    <p>El producto se puede modificar cuando las características del producto cambian, cuando se 
+                    encuentra algun error en los datos del producto o se quiere cambiar de categoría.
+                    Los datos que se pueden modificar son los siguientes</p>
+                    <h6>Elementos que se pueden modificar de un producto</h6>
+                    <ul>
+                        <li>Nombre del producto</li>
+                        <li>Descripción del producto</li>
+                        <li>Precio del producto</li>
+                        <li>Categoría</li>
+                    </ul>
+
+                    <h3>Ver un producto</h3>
+                    <p>Se puede ver las características completas de un producto que se encuentra en el inventario</p>
+                    <h6>Características</h6>
+                    </ul>
+                    <ul>
+                        <li>Nombre del producto</li>
+                        <li>Descripción del producto</li>
+                        <li>Precio del producto</li>
+                        <li>Cantidad</li>
+                        <li>Categoría del producto</li>
+                        <li>Fecha de ingreso</li>
+                        <li>Fecha de egreso</li>
+                    </ul>
+
+                    <h3>Ingreso de un producto existente</h3>
+                    <p>Cuando llegan nuevas existencias de un producto al inventario. Se selecciona un producto y se agrega 
+                    la nueva cantidad del producto a la cantidad ya existente del inventario. Se actualiza 
+                    la última fecha de ingreso.</p>
+                    <ul>
+                        <li>Cantidad</li>
+                        <li>Fecha de ingreso</li>
+                    </ul>
+
+                    <h3>Egreso de un producto existente</h3>
+                    <p>Cuando salen existencias de un producto del inventario. Se selecciona un producto y se indica  
+                    la cantidad del producto a restar del inventario. Se actualiza la última fecha de egreso. Si no hay 
+                    suficiente existencia, se notifica y no se puede realizar la salida del producto.</p>
+                    <h6>Elementos a considerar</h6>
+                    <ul>
+                        <li>Cantidad</li>
+                        <li>Fecha de egreso</li>
+                    </ul>
+                    
+                    <h3>Eliminar un producto</h3>
+                    <p>Eliminar un producto del inventario porque ya no se va a manejar ese producto. Se preguntará</p>
                 </div>
             </div>
         </div>

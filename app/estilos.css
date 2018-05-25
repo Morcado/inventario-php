@@ -2,6 +2,10 @@
     background-color: #99C482;
 }
 
+.ancho100 {
+  width: 100px;
+}
+
 body {
   margin-bottom:70px;
 }

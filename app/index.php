@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Consutar la base de datos y comaprar los bslores
         if ($data != false && $password == $data->password /*password_verify($password, $data->password*/ ) {
             $_SESSION['username'] = $username;
-            header('Location: add_product.php');
+            header('Location: product_list.php');
             return;
         }
         else {

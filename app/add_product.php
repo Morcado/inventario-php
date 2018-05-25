@@ -1,6 +1,50 @@
 <?php 
 session_start();
+include 'connection.php';
+$errores = "";
+$correcto = "";
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['category'] != "0") {
+        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+        $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING));
+        $category = intval($_POST['category']);
+
+        $sql = "SELECT * FROM inventory WHERE name = :name";
+        $sentence = $connection->prepare($sql);
+        $sentence->bindValue(':name', $name);
+        $sentence->execute();
+
+        // var_dump($_POST);
+        // Si el producto no esta en la base de datos
+        if ($sentence->fetchObject() == false) {
+            $sql = "INSERT INTO inventory (name, description, price, category) 
+                    VALUES (:name, :description, :price, :category)";
+            $sentence = $connection->prepare($sql);
+            $sentence->bindValue(':name', $name);
+            $sentence->bindValue(':description', $description);
+            $sentence->bindValue(':price', $price);
+            $sentence->bindValue(':category', $category);
+            $resultado = $sentence->execute();
+
+            if ($resultado == false) {
+                $errores = "No se pudo agregar a la base de datos";
+            }
+            else {
+                $correcto = "Producto agregado";
+            }
+        }
+        else {
+            $errores = "El producto ya existe";
+        }
+    }
+    else {
+        $errores = "Por favor rellena todos los campos";
+    }
+}
+
+// var_dump($_POST);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +72,21 @@ session_start();
 <body>
 <?php include 'navbar.php' ?>
     <div class="container pt-md-5 mt-md-5 pt-sm-5 mt-sm-5">
+        <?php if ($errores != "") { ?>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error: </strong><?=$errores?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php } else if ($correcto != "") { ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?=$correcto?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php } ?>
         <div class="row">
 <?php include 'navigation.php' ?>
 
@@ -45,42 +104,37 @@ session_start();
             <div class="col-md-5">
                 <form method="POST" action="">
                     <div class="form-group">
-                        <label for="nombre"><h5 class="mt-3 mt-lg-0 mt-md-0 ">Nombre del producto</h5></label>
-                        <input type="input" class="form-control rounded-0" id="product_name" name="product_name" placeholder="Ingresa el nombre del producto">
+                        <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0 ">Nombre del producto</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="name" name="name" placeholder="Ingresa el nombre del producto">
                     </div>
                     <div class="form-group">
-                        <label for="descripcion"><h5>Descripción del producto</h5></label>
-                        <textarea class="form-control rounded-0" id="product_description" name="product_description" rows="3" placeholder="Agrega una descripción breve"></textarea>
+                        <label for="description"><h5>Descripción del producto</h5></label>
+                        <textarea required class="form-control rounded-0" id="description" name="description" rows="3" placeholder="Agrega una descripción breve"></textarea>
+                    </div>  
+                    <div class="form-group">
+                        <label for="price"><h5>Precio</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="price" name="price" placeholder="100.00">
                     </div>
                     <div class="form-group">
-                        <label for="product_quantity"><h5>Cantidad</h5></label>
-                        <input type="input" class="form-control rounded-0" id="product_quantity" name="product_quantity" placeholder="10-100">
-                    </div>
-                    <div class="form-group">
-                        <label for="product_price"><h5>Precio</h5></label>
-                        <input type="input" class="form-control rounded-0" id="product_price" name="product_price" placeholder="300">
-                    </div>
-                    <div class="form-group">
-                        <label for="product_date_ingress"><h5>Fecha</h5></label>
-                        <input type="input" class="form-control rounded-0" id="product_date_ingress" name="product_date_ingress" placeholder="12/12/12">
-                    </div>
-                    <div class="form-group">
-                        <label for="product_category"><h5>Categoría</h5></label>
-                        <select class="form-control rounded-0" id="product_category">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
+                        <label for="category"><h5>Categoría</h5></label>
+                        <select required class="form-control rounded-0" id="category" name="category">
+                          <option value="0">Elige una categoría</option>
+                          <option value="1">Papel origami</option>
+                          <option value="2">Papel bond</option>
+                          <option value="3">Papel grueso</option>
+                          <option value="4">Papel de un color</option>
+                          <option value="5">Papel de dos colores</option>
                         </select>
                     </div>
                     <div class="my-3 text-right">
-                        <button type="submit" class="btn btn-outline-success rounded-0 my-sm-0 px-5">Guardar</button>
+                        <button type="submit" class="btn color-tema text-light rounded-0 my-sm-0 px-5">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
 <?php include 'footer.php' ?>
 </body>
 </html>
