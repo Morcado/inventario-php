@@ -1,5 +1,19 @@
 <?php 
 session_start();
+$data = [];
+if (($myFile = fopen("acerca.txt", "r")) != FALSE) {
+    $i = 0;
+    while (($line = fgets($myFile)) !== false) {
+        $data[$i] = $line;
+        $i++;
+    }
+    $data = array_values(array_filter($data, "trim"));
+    fclose($myFile);
+}
+else {
+    die("Error al abrir el archivo");
+}
+
  ?>
 
 <!DOCTYPE html>
@@ -33,20 +47,11 @@ session_start();
 <?php include 'navigation.php' ?>
                 <div class="col-md-7 mt-5 mt-lg-0 mt-sm-0">
                     <h2>Quienes somos</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+                    <p><?=$data[0]?></p>
                     <h2>Contacto</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <strong>Telefono: </strong><p><?=$data[1]?></p>
+                    <strong>Dirección: </strong><p><?=$data[2]?></p>
+                    <strong>Correo electrónico: </strong><p><?=$data[3]?></p>
                 </div>
             </div>
         </div>

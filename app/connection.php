@@ -1,4 +1,5 @@
 <?php 
+// Conexión con la base de datos
 $fuente = "mysql:host=localhost;dbname=proyecto_inventario";
 $usuario ="root";
 $contraseña ="root";

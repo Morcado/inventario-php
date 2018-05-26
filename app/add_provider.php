@@ -4,20 +4,14 @@ include 'connection.php';
 $errores = "";
 $correcto = "";
 
-$sql = "SELECT name FROM providers";
-$respuesta = $connection->query($sql);
-if ($respuesta != null) {
-    $data = $respuesta->fetchAll(PDO::FETCH_NUM);
-}
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "0") {
+    if ($_POST['name'] != "" && $_POST['phone'] != "" && $_POST['address'] != "" && $_POST['email'] != "0") {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING));
-        $provider = filter_input(INPUT_POST, 'provider', FILTER_SANITIZE_STRING);
+        $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+        $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
 
-        $sql = "SELECT * FROM inventory WHERE name = :name";
+        $sql = "SELECT * FROM providers WHERE name = :name";
         $sentence = $connection->prepare($sql);
         $sentence->bindValue(':name', $name);
         $sentence->execute();
@@ -25,24 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // var_dump($_POST);
         // Si el producto no esta en la base de datos
         if ($sentence->fetchObject() == false) {
-            $sql = "INSERT INTO inventory (name, description, price, provider) 
-                    VALUES (:name, :description, :price, :provider)";
+            $sql = "INSERT INTO providers (name, phone, address, email) 
+                    VALUES (:name, :phone, :address, :email)";
             $sentence = $connection->prepare($sql);
             $sentence->bindValue(':name', $name);
-            $sentence->bindValue(':description', $description);
-            $sentence->bindValue(':price', $price);
-            $sentence->bindValue(':provider', $provider);
+            $sentence->bindValue(':phone', $phone);
+            $sentence->bindValue(':address', $address);
+            $sentence->bindValue(':email', $email);
             $resultado = $sentence->execute();
 
             if ($resultado == false) {
                 $errores = "No se pudo agregar a la base de datos";
             }
             else {
-                $correcto = "Producto agregado";
+                $_SESSION['correcto'] = "Proveedor agregado";
+                header("Location: provider_list.php");
             }
         }
         else {
-            $errores = "El producto ya existe";
+            $errores = "El proveedor ya existe";
         }
     }
     else {
@@ -73,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Iconos -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     
-    <title>Agrega producto</title>
+    <title>Agrega proveedor</title>
 </head>
 <body>
 <?php include 'navbar.php' ?>
@@ -96,44 +91,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row">
 <?php include 'navigation.php' ?>
 
-            <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
-                <form>
-                    <div class="form-group">
-                        <label for="exampleFormControlFile1">Elegir Imagen</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                    </div>
-                </form>
-            </div>
 
             <!-- Columna derecha -->
             <div class="col-md-5">
                 <form method="POST" action="">
                     <div class="form-group">
-                        <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0 ">Nombre del producto</h5></label>
-                        <input required type="input" class="form-control rounded-0" id="name" name="name" placeholder="Papel Kami">
+                        <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0 ">Nombre</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="name" name="name" placeholder="David B. Kelley">
                     </div>
                     <div class="form-group">
-                        <label for="description"><h5>Descripción del producto</h5></label>
-                        <textarea required class="form-control rounded-0" id="description" name="description" rows="3" placeholder="Papel delgado con color de un lado..."></textarea>
-                    </div>  
-                    <div class="form-group">
-                        <label for="price"><h5>Precio</h5></label>
-                        <input required type="input" class="form-control rounded-0" id="price" name="price" placeholder="100.00">
+                        <label for="phone"><h5>Teléfono</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="phone" name="phone" placeholder="703-840-7835">
                     </div>
                     <div class="form-group">
-                        <label for="provider"><h5>Proveedor</h5></label>
-                        <select required class="form-control rounded-0" id="provider" name="provider">
-                          <?php if (count($data) > 0){ ?>
-                          <option value="-1">Elige un proveedor</option>
-                            <?php for ($i=0; $i < count($data); $i++) { ?>
-                                <option value="<?=$data[$i][0]?>"><?=$data[$i][0]?></option>
-                            <? } ?>
-                            
-                          <?php } else { ?>
-                            <option disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
-                          <? } ?>
-                        </select>
+                        <label for="address"><h5>Dirección</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="address" name="address" placeholder="2694 Forest Drive Culpeper, VA 22701">
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><h5>Correo electrónico</h5></label>
+                        <input required type="input" class="form-control rounded-0" id="email" name="email" placeholder="DavidBKelley@armyspy.com">
                     </div>
                     <div class="my-3 text-right">
                         <button type="submit" class="btn color-tema text-light rounded-0 my-sm-0 px-5">Guardar</button>

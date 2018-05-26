@@ -3,48 +3,40 @@ session_start();
 include 'connection.php';
 $errores = "";
 $correcto = "";
-
-$sql = "SELECT name FROM providers";
-$respuesta = $connection->query($sql);
-if ($respuesta != null) {
-    $data = $respuesta->fetchAll(PDO::FETCH_NUM);
-}
-
 if (isset($_SESSION['id'])) {
-    $id_product = intval($_SESSION['id']);
-    $sql = "SELECT * FROM inventory WHERE id_product = :id_product";
+    $id_provider = intval($_SESSION['id']);
+    $sql = "SELECT * FROM providers WHERE id_provider = :id_provider";
     $sentence = $connection->prepare($sql);
-    $sentence->bindValue(':id_product', $id_product);
+    $sentence->bindValue(':id_provider', $id_provider);
     $sentence->execute();
     $result = $sentence->fetchObject();
     if ($result == false) {
         $errores = "ID no existe";
     }
 
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    var_dump($_POST);
     if (isset($_SESSION['id'])) {
-        $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING);
+        $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $provider = filter_input(INPUT_POST, 'provider', FILTER_SANITIZE_STRING);
-        var_dump($provider);
+        $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
         $id = $_SESSION['id'];
 
-        $sql ="UPDATE inventory SET name = :name, description = :description, price = :price, provider = :provider
-                WHERE id_product = $id";
+        $sql ="UPDATE providers SET name = :name, phone = :phone, address = :address, email = :email
+                WHERE id_provider = $id";
         $sentence = $connection->prepare($sql);
 
         $sentence->bindValue(':name', $name);
-        $sentence->bindValue(':provider', $provider);
-        $sentence->bindValue(':description', $description);
-        $sentence->bindValue(':price', $price);
+        $sentence->bindValue(':email', $email);
+        $sentence->bindValue(':phone', $phone);
+        $sentence->bindValue(':address', $address);
         $sentence->execute();
 
-        $_SESSION['correcto'] = "Producto modificado correctamente";
-        header("Location: product_list.php");
+        $_SESSION['correcto'] = "Proveedor modificado correctamente";
+        header("Location: provider_list.php");
     }
     else {
         $errores = "Error al modificar: ID no definido";
@@ -73,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Iconos -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     
-    <title>Lista de productos</title>
+    <title>Editar proveedor</title>
 </head>
 <body>
 <?php include 'navbar.php' ?>
@@ -97,38 +89,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" action="">
         <div class="row">
 <?php include 'navigation.php' ?>
-        <?php if (isset($id_product)): ?>
-            <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Elegir Imagen</label>
-                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                </div>
-            </div>
+        <?php if (isset($id_provider)): ?>
             <div class="col-md-5">
-                <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0">Nombre del producto</h5></label>
-                <input type="input" class="form-control rounded-0" id="name" name="name" placeholder="Ingresa el nombre del producto" value="<?=$result->name?>">
                 <div class="form-group">
-                    <label for="description"><h5>Descripción del producto</h5></label>
-                    <textarea class="form-control rounded-0" id="description" name="description" rows="3" placeholder="Agrega una descripción breve"><?=$result->description?></textarea>
+                    <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0">Nombre</h5></label>
+                    <input type="input" class="form-control rounded-0" id="name" name="name" placeholder="David B. Kelley" value="<?=$result->name?>">
                 </div>
                 <div class="form-group">
-                    <label for="price"><h5>Precio</h5></label>
-                    <input type="input" class="form-control rounded-0" id="price" name="price" placeholder="300" value="<?=$result->price?>">
+                    <label for="phone"><h5>Teléfono</h5></label>
+                    <input type="input" class="form-control rounded-0" id="phone" name="phone" placeholder="300" value="<?=$result->phone?>">
                 </div>
                 <div class="form-group">
-                    <label for="provider"><h5>Provider</h5></label>
-                    <select class="form-control rounded-0" id="provider" name="provider">
-                        <?php if (count($data) > 0){ ?>
-                          <option value="-1">Elige un proveedor</option>
-                            <?php for ($i=0; $i < count($data); $i++) { ?>
-                                <option value="<?=$data[$i][0]?>"><?=$data[$i][0]?></option>
-                            <? } ?>
-                            
-                        <?php } else { ?>
-                            <option disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
-                        <? } ?>
-                    </select>
+                    <label for="address"><h5>Dirección</h5></label>
+                    <input type="input" class="form-control rounded-0" id="address" name="address" placeholder="300" value="<?=$result->address?>">
+                </div>
+                <div class="form-group">
+                    <label for="email"><h5>Dirección</h5></label>
+                    <input type="input" class="form-control rounded-0" id="email" name="email" placeholder="300" value="<?=$result->email?>">
                 </div>
                 <div class="my-3 text-right">
                     <button class="btn btn-outline-success rounded-0 my-sm-0 px-5">Guardar</button>

@@ -1,32 +1,22 @@
 <?php 
 session_start();
 include 'connection.php';
-
 $errores = "";
 $correcto = "";
 
-
-if (isset($_GET['id'])) {
-    $id_product = $_GET['id'];
-    $sql = "SELECT * FROM inventory WHERE id_product = $id_product";
-    $result = $connection->query($sql);
-    if ($result != false) {
-        $data = $result->fetch(PDO::FETCH_NAMED);
-        if ($data == false) {
-            $errores = "Producto no existe";
-        }
-        var_dump($data);
-    }
-    else {
-        $errores = "Error en la busqueda";
-    }
-}
-else {
-    $errores = "Producto no seleccionado";
+$sql = "SELECT id_product, name, price, quantity, provider, ingress_date, egress_date FROM inventory";
+$respuesta = $connection->query($sql);
+if ($respuesta != null) {
+    $data = $respuesta->fetchAll(PDO::FETCH_NUM);
+    var_dump($data);
 }
 
- ?>
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+}
+
+// var_dump($_POST);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,11 +38,12 @@ else {
     <!-- Iconos -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     
-    <title>Ver producto</title>
+    <title>Agrega producto</title>
 </head>
 <body>
 <?php include 'navbar.php' ?>
     <div class="container pt-md-5 mt-md-5 pt-sm-5 mt-sm-5">
+        <!-- Muestra mensajes de error y correcto -->
         <?php if ($errores != "") { ?>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <strong>Error: </strong><?=$errores?>
@@ -60,53 +51,48 @@ else {
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <?php } else if (isset($_SESSION['correcto']) && $_SESSION['correcto'] != "") { ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?=$_SESSION['correcto']?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <?=$_SESSION['correcto'] = ""?>
+        </div>
         <?php } ?>
         <div class="row">
 <?php include 'navigation.php' ?>
-            <?php if (isset($id_product)): ?>
-                
-            <div class="col-md-5 mt-5 mt-lg-0 mt-md-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
+
+            <div class="col-md-10">
+                <table class="table">
+                    <thead>
+                        <th>ID</th>
+                        <th>Dombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Proveedor</th>
+                        <th>Fecha de ingreso</th>
+                        <th>Fecha de egreso</th>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data as $key): ?>
+                        <tr>
+                            <td><?=$key[0]?></td>
+                            <td><?=$key[1]?></td>
+                            <td><?=$key[2]?></td>
+                            <td><?=$key[3]?></td>
+                            <td><?=$key[4]?></td>
+                            <td><?=$key[5]?></td>
+                            <td><?=$key[6]?></td>
+                        </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-5">
-                <div>
-                    <h5 class="mt-3 mt-lg-0 mt-md-0">Nombre del producto</h5>
-                    <p><?=$data['name']?></p>
-                </div>
-                <div>
-                    <h5>Descripción del producto</h5>
-                    <p><?=$data['description']?></p>
-                </div>
-                <div>
-                    <h5>Precio</h5>
-                    <p><?=$data['price']?></p>
-                </div>
-                <div>
-                    <h5>Cantidad</h5>
-                    <p><?=$data['quantity']?></p>
-                </div>
-                <div>
-                    <h5>Proveedor</h5>
-                    <p><?=$data['provider']?></p>
-                </div>
-                <div>
-                    <h5>Fecha de ingreso reciente</h5>
-                    <p><?=$data['ingress_date']?></p>
-                </div>
-                <div>
-                    <h5>Fecha de egreso reciente</h5>
-                    <p><?=$data['egress_date']?></p>
-                </div>
-                <form method="post" action="">
-                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5">Editar</button>
-                </form>
-            </div>
-            <?php endif ?>
         </div>
     </div>
-    <!-- </main> -->
+
 
 <?php include 'footer.php' ?>
-
-    </body>
-    </html>
+</body>
+</html>
