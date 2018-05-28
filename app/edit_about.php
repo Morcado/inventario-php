@@ -1,6 +1,11 @@
 <?php 
 session_start();
 
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $data = [];
 
 // $myFile = fopen($fileName, "r") or die("No se encuentra el archivo: " . $fileName); 

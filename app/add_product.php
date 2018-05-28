@@ -1,17 +1,31 @@
 <?php 
+
 session_start();
 include 'connection.php';
 $errores = "";
 $correcto = "";
 
-$sql = "SELECT name FROM providers";
-$respuesta = $connection->query($sql);
-if ($respuesta != null) {
-    $data = $respuesta->fetchAll(PDO::FETCH_NUM);
+
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    
+    $sql = "SELECT name FROM providers";
+    $respuesta = $connection->query($sql);
+    if ($respuesta != null) {
+        $data = $respuesta->fetchAll(PDO::FETCH_NUM);
+    }
+    else {
+        die("No se pudo cargar los proveedores");
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "0") {
+    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "-1") {
+
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
         $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING));
@@ -22,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sentence->bindValue(':name', $name);
         $sentence->execute();
 
-        // var_dump($_POST);
         // Si el producto no esta en la base de datos
         if ($sentence->fetchObject() == false) {
             $sql = "INSERT INTO inventory (name, description, price, provider) 
@@ -50,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// var_dump($_POST);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,11 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.min.js"></script>
     
     <!-- Boostrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity=" sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -93,22 +100,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
         </div>
         <?php } ?>
+        <form method="POST" action="">
         <div class="row">
 <?php include 'navigation.php' ?>
 
             <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
-                <form>
+                <a href="#">a</a>
                     <div class="form-group">
-                        <label for="exampleFormControlFile1">Elegir Imagen</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        <label for="image_name">Elegir Imagen</label>
                     </div>
-                </form>
             </div>
 
             <!-- Columna derecha -->
             <div class="col-md-5">
-                <form method="POST" action="">
                     <div class="form-group">
                         <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0 ">Nombre del producto</h5></label>
                         <input required type="input" class="form-control rounded-0" id="name" name="name" placeholder="Papel Kami">
@@ -124,23 +128,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="form-group">
                         <label for="provider"><h5>Proveedor</h5></label>
                         <select required class="form-control rounded-0" id="provider" name="provider">
-                          <?php if (count($data) > 0){ ?>
-                          <option value="-1">Elige un proveedor</option>
-                            <?php for ($i=0; $i < count($data); $i++) { ?>
-                                <option value="<?=$data[$i][0]?>"><?=$data[$i][0]?></option>
-                            <? } ?>
+
+                        <?php if (isset($data) && count($data) > 0): ?>
+                            <option value="-1">Elige un proveedor</option>
+                            <?php for ($i = 0; $i < count($data); $i++): ?>
+                            <option value= " <?= $data[$i][0] ?> " > <?= $data[$i][0] ?> </option>
+                            <? endfor ?>
                             
-                          <?php } else { ?>
-                            <option disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
-                          <? } ?>
+                        <?php endif ?>
+
+                        <?php if (count($data) == 0): ?>
+                            <option value="-1" disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
+                        <? endif ?>
+
                         </select>
                     </div>
                     <div class="my-3 text-right">
                         <button type="submit" class="btn color-tema text-light rounded-0 my-sm-0 px-5">Guardar</button>
                     </div>
-                </form>
             </div>
         </div>
+        </form>
     </div>
 
 

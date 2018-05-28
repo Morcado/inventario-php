@@ -4,6 +4,11 @@ include 'connection.php';
 $errores = "";
 $correcto = "";
 
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $sql = "SELECT name FROM providers";
 $respuesta = $connection->query($sql);
 if ($respuesta != null) {
@@ -131,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </select>
                 </div>
                 <div class="my-3 text-right">
-                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5">Guardar</button>
+                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5 mb-3">Guardar</button>
                 </div>
             </div>
         <?php endif ?>

@@ -1,5 +1,12 @@
 <?php 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 session_start();
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $data = [];
 if (($myFile = fopen("acerca.txt", "r")) != FALSE) {
     $i = 0;
@@ -13,6 +20,7 @@ if (($myFile = fopen("acerca.txt", "r")) != FALSE) {
 else {
     die("Error al abrir el archivo");
 }
+
 
  ?>
 

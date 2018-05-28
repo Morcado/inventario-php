@@ -4,11 +4,16 @@ include 'connection.php';
 $errores = "";
 $correcto = "";
 
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $sql = "SELECT id_product, name, price, quantity, provider, ingress_date, egress_date FROM inventory";
 $respuesta = $connection->query($sql);
 if ($respuesta != null) {
     $data = $respuesta->fetchAll(PDO::FETCH_NUM);
-    var_dump($data);
+ 
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -60,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?=$_SESSION['correcto'] = ""?>
         </div>
         <?php } ?>
+        <?php if ($_SESSION['username'] == "admin") { ?>
         <div class="row">
 <?php include 'navigation.php' ?>
-
             <div class="col-md-10">
                 <table class="table">
                     <thead>
@@ -90,6 +95,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </table>
             </div>
         </div>
+
+        <?php } else { ?>
+        
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error: </strong>No tiene los suficientes permisos para entrar aqui
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+<?php include 'navigation.php' ?>
+        <?php } ?>
     </div>
 
 

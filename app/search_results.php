@@ -1,23 +1,25 @@
 <?php 
-$errores = "";
 session_start();
+$errores = "";
 include 'connection.php';
 
 if (count($_SESSION) == 0) {
     header("Location: index.php");
     return;
 }
+$search = trim($_SESSION['search']);
+unset($_SESSION['search']);
 
-$sql = "SELECT id_product, name, price, quantity FROM inventory";
+$sql = "SELECT id_product, name, price, quantity FROM inventory WHERE name LIKE '%$search%'";
 $result = $connection->query($sql);
 $i = 0;
+
 if ($result != false) {
     $data = $result->fetchAll(PDO::FETCH_NAMED);
 }
 else {
     die("Error en la consulta");
 }
-
 unset($_SESSION['id']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -64,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <!-- Mis estilos -->
     <link rel="stylesheet" type="text/css" href="estilos.css">
-    <title>Lista de productos</title>
+    <title>Resultados de búsqueda</title>
 </head>
 <body>
 <?php include 'navbar.php' ?>
@@ -106,17 +108,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="col-lg-2 col order-2" id="b1">
                         <!-- Eliminar -->
-                        <button type="submit" class="my-2 btn btn-danger" name="b1" value="<?=$data[$i]['id_product']?>" title="Eliminar"><i class="fas fa-trash-alt"></i></button><span class=""> Eliminar</span><br>
+                        <button type="submit" class="my-2 btn btn-danger" name="b1" value="<?=$data[$i]['id_product']?>" title="Eliminar"><i class="fas fa-trash-alt"></i></button> Eliminar<br>
 
 
                         <!-- Modificar -->
-                        <button type="submit" class="btn btn-dark" name="b2" value="<?=$data[$i]['id_product']?>" title="Modificar"><i class="fas fa-pencil-alt"></i></button> <span>Editar</span>
+                        <button type="submit" class="btn btn-dark" name="b2" value="<?=$data[$i]['id_product']?>" title="Modificar"><i class="fas fa-edit"></i></button> Modificar
                     </div>
                     <div class="col-lg-3 col order-2">
                         <!-- Agregar cantidad -->
-                        <button type="submit" class="my-2 btn btn-secondary" name="b3" value="<?=$data[$i]['id_product']?>" title="Salida de producto"><i class="fas fas fa-plus"></i></button><span> Agregar</span><br>
+                        <button type="submit" class="my-2 btn btn-secondary" name="b3" value="<?=$data[$i]['id_product']?>" title="Salida de producto"><i class="fas fas fa-plus"></i></button> Agregar<br>
                         <!-- Quitar cantidad -->
-                        <button type="submit" class="btn btn-secondary" name="b4" value="<?=$data[$i++]['id_product']?>" title="Entrada de producto"><i class="fas fa-minus"></i></button> <span>Quitar</span>
+                        <button type="submit" class="btn btn-secondary" name="b4" value="<?=$data[$i++]['id_product']?>" title="Entrada de producto"><i class="fas fa-minus"></i></button> Quitar
                     </div>
                 </div>
                 </form>
@@ -126,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php } else { ?>
                     <!-- Si no hay productos en el inventario -->
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        No hay productos en el inventario
+                        No se encontró nada
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

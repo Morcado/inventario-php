@@ -1,6 +1,14 @@
 <?php 
 session_start();
+
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
  ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

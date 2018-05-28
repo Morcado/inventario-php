@@ -2,9 +2,17 @@
 session_start();
 include 'connection.php';
 
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $errores = "";
 $correcto = "";
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    header("Location: edit_product.php");
+}
 
 if (isset($_GET['id'])) {
     $id_product = $_GET['id'];
@@ -15,7 +23,6 @@ if (isset($_GET['id'])) {
         if ($data == false) {
             $errores = "Producto no existe";
         }
-        var_dump($data);
     }
     else {
         $errores = "Error en la busqueda";
@@ -66,7 +73,7 @@ else {
             <?php if (isset($id_product)): ?>
                 
             <div class="col-md-5 mt-5 mt-lg-0 mt-md-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
+                <a href="#"><img src="images/crane700x700.png" class="img-fluid"></a>
             </div>
             <div class="col-md-5">
                 <div>
@@ -98,7 +105,7 @@ else {
                     <p><?=$data['egress_date']?></p>
                 </div>
                 <form method="post" action="">
-                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5">Editar</button>
+                    <button type="submit" class="btn color-tema text-light my-sm-0 px-5 mb-3 mb-lg-3">Editar</button>
                 </form>
             </div>
             <?php endif ?>

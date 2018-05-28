@@ -4,7 +4,13 @@ include 'connection.php';
 $errores = "";
 $correcto = "";
 
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
     if ($_POST['name'] != "" && $_POST['phone'] != "" && $_POST['address'] != "" && $_POST['email'] != "0") {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);

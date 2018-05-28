@@ -3,6 +3,12 @@ session_start();
 include 'connection.php';
 $errores = "";
 $correcto = "";
+
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 if (isset($_SESSION['id'])) {
     $id_provider = intval($_SESSION['id']);
     $sql = "SELECT * FROM providers WHERE id_provider = :id_provider";

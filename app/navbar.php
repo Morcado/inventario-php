@@ -1,12 +1,17 @@
-        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema invisible">
-
+<?php 
+    if (isset($_POST['search'])) {
+        $_SESSION['search'] = $_POST['search'];
+        header("Location: search_results.php");
+    }
+ ?>
+        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema">
             <!-- Logotipo -->
             <img src="images/crane100x100.png" height="50px">
             <button class="navbar-toggler mr-auto ml-3" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon outline"></span>
             </button>
 
-            <a class="navbar-brand ml-3 d-none d-sm-block" href="#">Origami</a>
+            <h5 class="text-light">Origami</h5>
 
             <div class="ml-5 text-white">
                 <h4 id="pageTitle"></h4>
@@ -18,12 +23,12 @@
                 <?php if (isset($_SESSION['username'])){ ?>
                 <!-- Barra de búsqueda -->
                 <div class="row">
-                    <form class=" form-inline my-2 my-lg-0 ">
+                    <form method="POST" action="" class="form-inline my-2 my-lg-0 ">
                         <div class="col-8">
-                            <input class="form-control mr-sm-2 rounded-0" type="search" placeholder="Buscar" aria-label="Search">
+                            <input class="form-control mr-sm-2 rounded-0" type="text" id="search" name="search" placeholder="Buscar" aria-label="Search">
                         </div>
                         <div class="col">
-                            <button class="btn btn-outline-success my-2 my-sm-0 rounded-0" type="submit">Buscar</button>
+                            <button class="btn btn-success my-2 my-sm-0" id="btnSearch" type="submit" disabled="">Buscar</button>
                         </div>
                     </form>
                 </div>

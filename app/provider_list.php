@@ -2,6 +2,12 @@
 $errores = "";
 session_start();
 include 'connection.php';
+
+if (count($_SESSION) == 0) {
+    header("Location: index.php");
+    return;
+}
+
 $sql = "SELECT id_provider, name, phone, address, email FROM providers";
 $result = $connection->query($sql);
 $i = 0;
@@ -67,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <?php } else if ($_SESSION['correcto'] != "") { ?>
+        <?php } else if (isset($_SESSION['correcto']) && $_SESSION['correcto'] != "") { ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?=$_SESSION['correcto']?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -79,26 +85,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="row">
 <?php include 'navigation.php' ?>
-            <div class="col-md-10 mt-5 mt-lg-0">
+            <div class="col-md-10 mt-5 mt-lg-0 col">
                 <!-- Hacer que se imprima toda la tabla -->
                 <?php if (count($data) > 0) { ?>
                 <?php foreach ($data as $key) { ?>
                 <form method="POST" action="">                
                 <div class="row mb-4" id="botones">
-                    <div class="col-5 pl-0">
+                    <div class=" col-sm-auto col-lg-6  order-1">
                         <strong>Nombre: </strong><span id="dname"><?=$data[$i]['name']?></span><br>
                         <strong>Telefono: </strong><span id="dphone"><?=$data[$i]['phone']?></span><br>
                         <strong>Dirección: </strong><span id="daddress"><?=$data[$i]['address']?></span><br>
                         <strong>Correo electrónico: </strong><span id="demail"><?=$data[$i++]['email']?></span><br>
                         
                     </div>
-                    <div class="col-2" id="b1">
+                    <div class="col order-2" id="b1">
                         <!-- Eliminar -->
-                        <button type="button" class="my-2 btn btn-danger btnGetId" value="<?=$data[$i]['id_provider']?>" data-toggle="modal" data-target="#confirmation" title="Eliminar"><i class="fas fa-trash-alt"></i></button> Eliminar<br>
+                        <button type="button" class="my-2 btn btn-danger btnGetId" value="<?=$data[$i]['id_provider']?>" data-toggle="modal" data-target="#confirmation" title="Eliminar"><i class="fas fa-trash-alt"></i></button> eliminar
 
 
                         <!-- Modificar -->
-                        <button type="submit" class="btn btn-warning" name="b2" value="<?=$data[$i]['id_provider']?>" title="Modificar"><i class="fas fa-edit"></i></button> Modificar
+                        <button type="submit" class="btn btn-warning" name="b2" value="<?=$data[$i]['id_provider']?>" title="Modificar"><i class="fas fa-pencil-alt"></i></i></button> Modificar
                     </div>
                 </div>
                 </form>
