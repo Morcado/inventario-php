@@ -11,21 +11,19 @@ if (count($_SESSION) == 0) {
     return;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    
-    $sql = "SELECT name FROM providers";
-    $respuesta = $connection->query($sql);
-    if ($respuesta != null) {
-        $data = $respuesta->fetchAll(PDO::FETCH_NUM);
-    }
-    else {
-        die("No se pudo cargar los proveedores");
-    }
+$sql = "SELECT name FROM providers";
+$respuesta = $connection->query($sql);
+if ($respuesta != null) {
+    $data = $respuesta->fetchAll(PDO::FETCH_NUM);
 }
+else {
+    die("No se pudo cargar los proveedores");
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "-1") {
-
+        var_dump($_POST);
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
         $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING));
@@ -105,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include 'navigation.php' ?>
 
             <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#">a</a>
+                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
                     <div class="form-group">
                         <label for="image_name">Elegir Imagen</label>
                     </div>
@@ -129,17 +127,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="provider"><h5>Proveedor</h5></label>
                         <select required class="form-control rounded-0" id="provider" name="provider">
 
-                        <?php if (isset($data) && count($data) > 0): ?>
-                            <option value="-1">Elige un proveedor</option>
-                            <?php for ($i = 0; $i < count($data); $i++): ?>
-                            <option value= " <?= $data[$i][0] ?> " > <?= $data[$i][0] ?> </option>
-                            <? endfor ?>
+                        <?php if (count($data) > 0){ ?>
+                          <option value="-1">Elige un proveedor</option>
+                            <?php for ($i=0; $i < count($data); $i++) { ?>
+                                <option value="<?=$data[$i][0]?>"><?=$data[$i][0]?></option>
+                            <?php } ?>
                             
-                        <?php endif ?>
-
-                        <?php if (count($data) == 0): ?>
-                            <option value="-1" disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
-                        <? endif ?>
+                        <?php } else { ?>
+                            <option disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
+                        <?php } ?>
 
                         </select>
                     </div>

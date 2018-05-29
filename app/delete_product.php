@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $resultado = $sentence->fetchObject();
             if ($resultado == false) {
                 $_SESSION['correcto'] = "Producto eliminado";
-                
+                unset($_SESSION['id']);
                 header("Location: product_list.php");
             }
             else {
@@ -39,7 +39,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     else {
-        $errores = "Error al eliminar, no se eligio una opción correcta";
+        if (isset($_POST['confirm2'])) {
+
+            if ($_POST['confirm2'] == "1") {
+                $id_provider = $_SESSION['id'];
+                $sql = "DELETE FROM providers WHERE id_provider = :id_provider";
+                $sentence = $connection->prepare($sql);
+                $sentence->bindValue(':id_provider', $id_provider);
+                $sentence->execute();
+
+                $resultado = $sentence->fetchObject();
+                if ($resultado == false) {
+                    unset($_SESSION['id']);
+                    unset($_SESSION['pr']);
+                    $_SESSION['correcto'] = "Proveedor eliminado";
+                    
+                    header("Location: provider_list.php");
+                }
+                else {
+                    $errores = "El proveedor no pudo eliminarse";
+                }
+            }
+            else {
+                unset($_SESSION['id']);
+                unset($_SESSION['pr']);
+                header("Location: provider_list.php");
+            }
+        }
     }
 }
 
@@ -85,10 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
         </div>
         <?php } ?>
+        <form method="POST" action="">
         <div class="row">
 <?php include 'navigation.php' ?>
             <div class="col-md-5">
-            <form method="POST" action="">
+                <?php if (isset($_SESSION['pr'])){ ?>
+                <p>¿Estás seguro de eliminar el proveedor?</p>
+                <div class="form-inline">
+                    <div class="form-group mr-3">
+                        <button type="submit" name="confirm2" value="0" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" name="confirm2" value="1" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </div>
+                    
+                <?php } else { ?>
                 <p>¿Estás seguro de eliminar el producto?</p>
                 <div class="form-inline">
                     <div class="form-group mr-3">
@@ -98,9 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <button type="submit" name="confirm" value="1" class="btn btn-danger">Eliminar</button>
                     </div>
                 </div>
-            </form>
+                <?php } ?>
             </div>
         </div>
+        </form>
     </div>
 
 

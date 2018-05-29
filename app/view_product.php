@@ -9,8 +9,11 @@ if (count($_SESSION) == 0) {
 
 $errores = "";
 $correcto = "";
+$id_product;
+var_dump($_GET  );
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $_SESSION['id'] = $_POST['id'];
     header("Location: edit_product.php");
 }
 
@@ -104,8 +107,8 @@ else {
                     <h5>Fecha de egreso reciente</h5>
                     <p><?=$data['egress_date']?></p>
                 </div>
-                <form method="post" action="">
-                    <button type="submit" class="btn color-tema text-light my-sm-0 px-5 mb-3 mb-lg-3">Editar</button>
+                <form method="POST" action="">
+                    <button type="submit" name="id" value="<?=$data['id_product']?>" class="btn btn-success color-tema text-light my-sm-0 px-5 mb-3 mb-lg-3">Editar</button>
                 </form>
             </div>
             <?php endif ?>

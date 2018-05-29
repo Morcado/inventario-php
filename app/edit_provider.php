@@ -23,7 +23,6 @@ if (isset($_SESSION['id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    var_dump($_POST);
     if (isset($_SESSION['id'])) {
         $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
@@ -114,7 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="input" class="form-control rounded-0" id="email" name="email" placeholder="300" value="<?=$result->email?>">
                 </div>
                 <div class="my-3 text-right">
-                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5">Guardar</button>
+                    <a href="provider_list.php" class="btn btn-secondary text-light my-sm-0">Cancelar</a>
+                    <button class="btn btn-success color-tema text-light my-sm-0">Guardar</button>
                 </div>
             </div>
         <?php endif ?>

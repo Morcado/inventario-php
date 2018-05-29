@@ -9,6 +9,8 @@ if (count($_SESSION) == 0) {
     return;
 }
 
+
+var_dump($_SESSION);
 $sql = "SELECT name FROM providers";
 $respuesta = $connection->query($sql);
 if ($respuesta != null) {
@@ -25,8 +27,6 @@ if (isset($_SESSION['id'])) {
     if ($result == false) {
         $errores = "ID no existe";
     }
-
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -128,15 +128,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           <option value="-1">Elige un proveedor</option>
                             <?php for ($i=0; $i < count($data); $i++) { ?>
                                 <option value="<?=$data[$i][0]?>"><?=$data[$i][0]?></option>
-                            <? } ?>
+                            <?php } ?>
                             
                         <?php } else { ?>
                             <option disabled selected>No hay proveedores. Por favor agregar un proveedor</option>
-                        <? } ?>
+                        <?php } ?>
                     </select>
                 </div>
                 <div class="my-3 text-right">
-                    <button class="btn btn-outline-success rounded-0 my-sm-0 px-5 mb-3">Guardar</button>
+                    <a href="product_list.php" class="btn btn-secondary my-sm-0 mb-3">Cancelar</a>
+                    <button class="btn btn-success color-tema my-sm-0 mb-3">Guardar</button>
                 </div>
             </div>
         <?php endif ?>
