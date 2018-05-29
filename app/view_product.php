@@ -76,7 +76,7 @@ else {
             <?php if (isset($id_product)): ?>
                 
             <div class="col-md-5 mt-5 mt-lg-0 mt-md-0">
-                <a href="#"><img src="images/crane700x700.png" class="img-fluid"></a>
+                <a href="#"><img src="inventory_images/<?=$data['image']?>" class="img-fluid"></a>
             </div>
             <div class="col-md-5">
                 <div>

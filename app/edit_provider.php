@@ -27,21 +27,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-        $id = $_SESSION['id'];
+       
 
-        $sql ="UPDATE providers SET name = :name, phone = :phone, address = :address, email = :email
-                WHERE id_provider = $id";
-        $sentence = $connection->prepare($sql);
+        if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
+                # code...
+            $id = $_SESSION['id'];
 
-        $sentence->bindValue(':name', $name);
-        $sentence->bindValue(':email', $email);
-        $sentence->bindValue(':phone', $phone);
-        $sentence->bindValue(':address', $address);
-        $sentence->execute();
+            $sql ="UPDATE providers SET name = :name, phone = :phone, address = :address, email = :email
+                    WHERE id_provider = $id";
+            $sentence = $connection->prepare($sql);
 
-        $_SESSION['correcto'] = "Proveedor modificado correctamente";
-        header("Location: provider_list.php");
+            $sentence->bindValue(':name', $name);
+            $sentence->bindValue(':email', $email);
+            $sentence->bindValue(':phone', $phone);
+            $sentence->bindValue(':address', $address);
+            $sentence->execute();
+
+            $_SESSION['correcto'] = "Proveedor modificado correctamente";
+            header("Location: provider_list.php");
+        }
+        else {
+            $errores = "Correo no válido"
+;        }
     }
     else {
         $errores = "Error al modificar: ID no definido";

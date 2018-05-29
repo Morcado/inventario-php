@@ -9,8 +9,6 @@ if (count($_SESSION) == 0) {
     return;
 }
 
-
-var_dump($_SESSION);
 $sql = "SELECT name FROM providers";
 $respuesta = $connection->query($sql);
 if ($respuesta != null) {
@@ -29,8 +27,11 @@ if (isset($_SESSION['id'])) {
     }
 }
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_SESSION['id'])) {
+
+        
         $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING);
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
@@ -104,11 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include 'navigation.php' ?>
         <?php if (isset($id_product)): ?>
             <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Elegir Imagen</label>
-                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                </div>
+                <a href="#"><img src="inventory_images/<?=$result->image?>" class="img-fluid"></a>
+
             </div>
             <div class="col-md-5">
                 <label for="name"><h5 class="mt-3 mt-lg-0 mt-md-0">Nombre del producto</h5></label>

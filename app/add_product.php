@@ -20,13 +20,20 @@ else {
     die("No se pudo cargar los proveedores");
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "-1") {
-        var_dump($_POST);
+    if ($_POST['name'] != "" && $_POST['description'] != "" && $_POST['price'] != "" && $_POST['provider'] != "-1" 
+        && $_FILES['fileToUpload']['name'] != "") {
+        $image = $_FILES["fileToUpload"]['tmp_name'];
+        $destiny = 'inventory_images/' . $_FILES['fileToUpload']['name'];
+
+        // var_dump($_FILES['fileToUpload']['name']);
+
+        // var_dump($destiny);
+
+
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_STRING));
+        $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT));
         $provider = filter_input(INPUT_POST, 'provider', FILTER_SANITIZE_STRING);
 
         $sql = "SELECT * FROM inventory WHERE name = :name";
@@ -36,25 +43,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Si el producto no esta en la base de datos
         if ($sentence->fetchObject() == false) {
-            $sql = "INSERT INTO inventory (name, description, price, provider) 
-                    VALUES (:name, :description, :price, :provider)";
+            //$sql = "INSERT INTO inventory (name, description, price, provider, image) VALUES (:name, :description, :price, :provider, :image)";
+            $sql = "INSERT INTO inventory SET name = :name, description = :description, price = :price, provider = :provider, image = :image";
             $sentence = $connection->prepare($sql);
             $sentence->bindValue(':name', $name);
             $sentence->bindValue(':description', $description);
             $sentence->bindValue(':price', $price);
             $sentence->bindValue(':provider', $provider);
-            $resultado = $sentence->execute();
+            $sentence->bindValue(':image', $_FILES['fileToUpload']['name']);
 
-            if ($resultado == false) {
-                $errores = "No se pudo agregar a la base de datos";
-            }
-            else {
-                $correcto = "Producto agregado";
-            }
+
+
+                    print_r($image);
+                    if (move_uploaded_file($image, $destiny)) {
+                        // $correcto = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+                        $resultado = $sentence->execute();
+
+                        if ($resultado == false) {
+                            $errores = "No se pudo agregar a la base de datos";
+                        }
+                        else {
+                            $correcto = "Producto agregado";
+                        }
+                    }
+                    else {
+                        $errores = "El archivo no se pudo subir";
+
+                    }
+                
+            
         }
         else {
             $errores = "El producto ya existe";
         }
+        
     }
     else {
         $errores = "Por favor rellena todos los campos";
@@ -98,15 +120,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
         </div>
         <?php } ?>
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
         <div class="row">
 <?php include 'navigation.php' ?>
 
             <div class="col-md-5 mt-5 mt-lg-0">
-                <a href="#"><img src="holder.js/500x500" class="img-fluid"></a>
-                    <div class="form-group">
-                        <label for="image_name">Elegir Imagen</label>
-                    </div>
+                    Select image to upload:
+                    <input type="file" name="fileToUpload" id="fileToUpload">
             </div>
 
             <!-- Columna derecha -->

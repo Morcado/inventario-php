@@ -15,35 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+        if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) == true){
 
-        $sql = "SELECT * FROM providers WHERE name = :name";
-        $sentence = $connection->prepare($sql);
-        $sentence->bindValue(':name', $name);
-        $sentence->execute();
-
-        // var_dump($_POST);
-        // Si el producto no esta en la base de datos
-        if ($sentence->fetchObject() == false) {
-            $sql = "INSERT INTO providers (name, phone, address, email) 
-                    VALUES (:name, :phone, :address, :email)";
+            $sql = "SELECT * FROM providers WHERE name = :name";
             $sentence = $connection->prepare($sql);
             $sentence->bindValue(':name', $name);
-            $sentence->bindValue(':phone', $phone);
-            $sentence->bindValue(':address', $address);
-            $sentence->bindValue(':email', $email);
-            $resultado = $sentence->execute();
+            $sentence->execute();
 
-            if ($resultado == false) {
-                $errores = "No se pudo agregar a la base de datos";
+            // var_dump($_POST);
+            // Si el producto no esta en la base de datos
+            if ($sentence->fetchObject() == false) {
+                $sql = "INSERT INTO providers (name, phone, address, email) 
+                        VALUES (:name, :phone, :address, :email)";
+                $sentence = $connection->prepare($sql);
+                $sentence->bindValue(':name', $name);
+                $sentence->bindValue(':phone', $phone);
+                $sentence->bindValue(':address', $address);
+                $sentence->bindValue(':email', $email);
+                $resultado = $sentence->execute();
+
+                if ($resultado == false) {
+                    $errores = "No se pudo agregar a la base de datos";
+                }
+                else {
+                    $_SESSION['correcto'] = "Proveedor agregado";
+                    header("Location: provider_list.php");
+                }
             }
             else {
-                $_SESSION['correcto'] = "Proveedor agregado";
-                header("Location: provider_list.php");
+                $errores = "El proveedor ya existe";
             }
         }
         else {
-            $errores = "El proveedor ya existe";
+            $errores = "Correo no válido";
         }
     }
     else {

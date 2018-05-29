@@ -8,7 +8,7 @@ if (count($_SESSION) == 0) {
     return;
 }
 
-$sql = "SELECT id_product, name, price, quantity FROM inventory";
+$sql = "SELECT id_product, name, price, quantity, image FROM inventory";
 $result = $connection->query($sql);
 $i = 0;
 if ($result != false) {
@@ -18,6 +18,7 @@ else {
     die("Error en la consulta");
 }
 
+var_dump($data[0]['image']);
 unset($_SESSION['id']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -96,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <form method="POST" action="">                
                 <div class="row mb-4" id="botones">
                     <div class="col-2">
-                        <a href="#"><img src="images/crane100x100.png" class="img-fluid"></a>
+                        <a href="#"><img src="inventory_images/<?=$data[$i]['image']?>" class="img-fluid"></a>
                     </div>
                     <div class="col-lg-5  col-9 order-1">
                         <strong>Nombre: </strong><span id="dname"><?=$data[$i]['name']?></span><br>
