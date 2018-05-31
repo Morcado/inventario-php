@@ -4,7 +4,7 @@
         header("Location: search_results.php");
     }
  ?>
-        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema">
+        <nav class=" navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-top color-tema ">
             <!-- Logotipo -->
             <img src="images/crane100x100.png" height="50px">
             <button class="navbar-toggler mr-auto ml-3" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

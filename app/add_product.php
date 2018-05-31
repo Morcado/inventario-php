@@ -27,13 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $destiny = 'inventory_images/' . $_FILES['fileToUpload']['name'];
 
         // var_dump($_FILES['fileToUpload']['name']);
-
+        var_dump($_POST);
         // var_dump($destiny);
 
 
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $price = floatval(filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT));
+        $price = $_POST['price'];
         $provider = filter_input(INPUT_POST, 'provider', FILTER_SANITIZE_STRING);
 
         $sql = "SELECT * FROM inventory WHERE name = :name";
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Si el producto no esta en la base de datos
         if ($sentence->fetchObject() == false) {
-            //$sql = "INSERT INTO inventory (name, description, price, provider, image) VALUES (:name, :description, :price, :provider, :image)";
-            $sql = "INSERT INTO inventory SET name = :name, description = :description, price = :price, provider = :provider, image = :image";
+            $sql = "INSERT INTO inventory (name, description, price, provider, image) VALUES (:name, :description, :price, :provider, :image)";
+            // $sql = "INSERT INTO inventory SET name = :name, description = :description, price = :price, provider = :provider, image = :image";
             $sentence = $connection->prepare($sql);
             $sentence->bindValue(':name', $name);
             $sentence->bindValue(':description', $description);
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>  
                     <div class="form-group">
                         <label for="price"><h5>Precio</h5></label>
-                        <input required type="input" class="form-control rounded-0" id="price" name="price" placeholder="100.00">
+                        <input required type="number" class="form-control rounded-0" id="price" name="price" placeholder="100.00">
                     </div>
                     <div class="form-group">
                         <label for="provider"><h5>Proveedor</h5></label>
